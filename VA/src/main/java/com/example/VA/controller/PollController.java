@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/polls")
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://localhost:3002"})
 public class PollController {
 
     private final PollService pollService;
@@ -35,6 +36,15 @@ public class PollController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('CREATOR')")
     public ResponseEntity<Poll> createPoll(@RequestBody Poll poll) {
         return ResponseEntity.ok(pollService.createPoll(poll));
+    }
+
+    // Close a poll by ID
+    @PutMapping("/{id}/close")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CREATOR')")
+    public ResponseEntity<Poll> closePoll(@PathVariable Long id) {
+        return pollService.closePoll(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // Delete a poll by ID

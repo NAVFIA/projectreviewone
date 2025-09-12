@@ -26,6 +26,14 @@ public class PollService {
         return pollRepository.save(poll);
     }
 
+    public Optional<Poll> closePoll(Long id) {
+        return pollRepository.findById(id)
+                .map(poll -> {
+                    poll.setStatus(Poll.Status.CLOSED);
+                    return pollRepository.save(poll);
+                });
+    }
+
     public void deletePoll(Long id) {
         pollRepository.deleteById(id);
     }
