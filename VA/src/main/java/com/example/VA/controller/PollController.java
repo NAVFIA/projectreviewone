@@ -4,6 +4,7 @@ import com.example.VA.entity.Poll;
 import com.example.VA.service.PollService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,12 +32,14 @@ public class PollController {
 
     // Create a new poll
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CREATOR')")
     public ResponseEntity<Poll> createPoll(@RequestBody Poll poll) {
         return ResponseEntity.ok(pollService.createPoll(poll));
     }
 
     // Delete a poll by ID
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletePoll(@PathVariable Long id) {
         pollService.deletePoll(id);
         return ResponseEntity.noContent().build();

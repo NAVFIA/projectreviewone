@@ -1,10 +1,16 @@
 package com.example.VA.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.VA.entity.Vote;
 import com.example.VA.service.VoteService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/votes")
@@ -22,6 +28,7 @@ public class VoteController {
      * @return the saved Vote
      */
     @PostMapping("/cast")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CREATOR') or hasRole('VOTER')")
     public ResponseEntity<Vote> castVote(
             @RequestParam Long userId,
             @RequestParam Long pollId,

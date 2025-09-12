@@ -23,7 +23,7 @@ public class VoteService {
     public Vote castVote(Long userId, Long pollId, Long optionId) {
 
         // Check if the user already voted in this poll
-        boolean alreadyVoted = voteRepository.existsByPoll_IdAndVoter_Id(pollId, userId);
+        boolean alreadyVoted = voteRepository.existsByUserIdAndPollId(userId, pollId);
         if (alreadyVoted) {
             throw new RuntimeException("User has already voted in this poll!");
         }
@@ -44,8 +44,7 @@ public class VoteService {
 
         // Save vote
         Vote vote = Vote.builder()
-                .voter(user)
-                .poll(poll)
+                .user(user)
                 .option(option)
                 .build();
 

@@ -3,6 +3,7 @@ package com.example.VA.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ public class OptionController {
 
     
     @GetMapping("/poll/{pollId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CREATOR') or hasRole('VOTER')")
     public ResponseEntity<List<Option>> getOptionsByPoll(@PathVariable Long pollId) {
         List<Option> options = optionService.getOptionsByPoll(pollId);
         return ResponseEntity.ok(options);
@@ -31,6 +33,7 @@ public class OptionController {
 
     
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CREATOR')")
     public ResponseEntity<Option> createOption(@RequestBody Option option) {
         Option createdOption = optionService.createOption(option);
         return ResponseEntity.ok(createdOption);
@@ -38,6 +41,7 @@ public class OptionController {
 
     
     @PostMapping("/{optionId}/vote")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CREATOR') or hasRole('VOTER')")
     public ResponseEntity<Option> voteOption(@PathVariable Long optionId) {
         Option votedOption = optionService.voteOption(optionId);
         return ResponseEntity.ok(votedOption);

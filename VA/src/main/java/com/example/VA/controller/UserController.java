@@ -4,6 +4,7 @@ import com.example.VA.entity.User;
 import com.example.VA.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class UserController {
 
     // Create a new user
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User savedUser = userService.saveUser(user);
         return ResponseEntity.ok(savedUser);
@@ -24,6 +26,7 @@ public class UserController {
 
     // Get user by email
     @GetMapping("/by-email")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
         Optional<User> user = userService.findByEmail(email);
         return user.map(ResponseEntity::ok)
@@ -32,6 +35,7 @@ public class UserController {
 
     // Get user by ID
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok)

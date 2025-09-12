@@ -2,16 +2,13 @@ package com.example.VA.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"poll_id", "voter_id"})}
-)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "option_id"}))
 public class Vote {
 
     @Id
@@ -19,18 +16,10 @@ public class Vote {
     private Long id;
 
     @ManyToOne
-    private Poll poll;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
+    @JoinColumn(name = "option_id")
     private Option option;
-
-    @ManyToOne
-    private User voter;
-
-    private LocalDateTime timestamp;
-
-    @PrePersist
-    public void onCreate() {
-        this.timestamp = LocalDateTime.now();
-    }
 }
