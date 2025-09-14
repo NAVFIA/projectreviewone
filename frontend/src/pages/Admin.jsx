@@ -39,6 +39,19 @@ export default function Admin() {
     }
   };
 
+  const deleteUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      return;
+    }
+    
+    try {
+      await userAPI.deleteUser(userId);
+      await loadUsers();
+    } catch (e) {
+      setError('Failed to delete user');
+    }
+  };
+
   const closePoll = async (pollId) => {
     if (!window.confirm('Are you sure you want to close this poll?')) {
       return;
@@ -136,6 +149,12 @@ export default function Admin() {
                         <button className={`px-2 py-1 rounded-lg text-xs font-medium transition ${
                           u.role === 'ADMIN' ? 'bg-red-800 text-red-300' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`} onClick={() => updateRole(u.id, 'ADMIN')}>ADMIN</button>
+                        <button
+                          onClick={() => deleteUser(u.id)}
+                          className="px-2 py-1 bg-red-900 text-red-300 rounded text-xs hover:bg-red-800"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}

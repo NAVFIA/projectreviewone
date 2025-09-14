@@ -20,6 +20,15 @@ public class VoteService {
     private final UserRepository userRepository;
     private final PollRepository pollRepository;
 
+    public Vote castVoteByOption(Long userId, Long optionId) {
+        // Fetch option first to get poll
+        Option option = optionRepository.findById(optionId)
+                .orElseThrow(() -> new RuntimeException("Option not found"));
+        
+        Long pollId = option.getPoll().getId();
+        return castVote(userId, pollId, optionId);
+    }
+
     public Vote castVote(Long userId, Long pollId, Long optionId) {
 
         // Check if the user already voted in this poll

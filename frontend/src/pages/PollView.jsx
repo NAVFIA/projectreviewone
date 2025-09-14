@@ -18,12 +18,9 @@ export default function PollView() {
 
   const load = async () => {
     try {
-      const [{ data: p }, { data: o }] = await Promise.all([
-        pollAPI.getPollById(id),
-        pollAPI.getPollById(id).then(() => []), // Placeholder for options
-      ]);
+      const { data: p } = await pollAPI.getPollById(id);
       setPoll(p);
-      setOptions(o || []);
+      setOptions(p.options || []);
     } catch (e) {
       setError('Failed to load poll');
     }
